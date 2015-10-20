@@ -74,29 +74,29 @@
         make.size.mas_equalTo(CGSizeMake(self.view.bounds.size.width, 50));
     }];
     
-    testLabel1 = [UILabel new];
-    testLabel1.text = @"testttttttttttttttttttt1";
-    testLabel1.textAlignment = NSTextAlignmentCenter;
-    testLabel1.hidden = YES;
-    testLabel1.alpha = 1.0f;
-    [_testView addSubview:testLabel1];
-    [testLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_testView);
-        make.bottom.equalTo(testLabel);
-        make.size.mas_equalTo(CGSizeMake(self.view.bounds.size.width, 50));
-    }];
-    
-    testLabel2 = [UILabel new];
-    testLabel2.text = @"testttttttttttttttttttt2";
-    testLabel2.textAlignment = NSTextAlignmentCenter;
-    testLabel2.hidden = YES;
-    testLabel2.alpha = 1.0f;
-    [_testView addSubview:testLabel2];
-    [testLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_testView);
-        make.bottom.equalTo(testLabel2);
-        make.size.mas_equalTo(CGSizeMake(self.view.bounds.size.width, 50));
-    }];
+//    testLabel1 = [UILabel new];
+//    testLabel1.text = @"testttttttttttttttttttt1";
+//    testLabel1.textAlignment = NSTextAlignmentCenter;
+//    testLabel1.hidden = YES;
+//    testLabel1.alpha = 1.0f;
+//    [_testView addSubview:testLabel1];
+//    [testLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerX.equalTo(_testView);
+//        make.bottom.equalTo(testLabel);
+//        make.size.mas_equalTo(CGSizeMake(self.view.bounds.size.width, 50));
+//    }];
+//    
+//    testLabel2 = [UILabel new];
+//    testLabel2.text = @"testttttttttttttttttttt2";
+//    testLabel2.textAlignment = NSTextAlignmentCenter;
+//    testLabel2.hidden = YES;
+//    testLabel2.alpha = 1.0f;
+//    [_testView addSubview:testLabel2];
+//    [testLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerX.equalTo(_testView);
+//        make.bottom.equalTo(testLabel2);
+//        make.size.mas_equalTo(CGSizeMake(self.view.bounds.size.width, 50));
+//    }];
     
     [self.view addSubview:_testView];
     [_testView mas_makeConstraints:^(MASConstraintMaker *make) {
