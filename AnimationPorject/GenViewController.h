@@ -10,6 +10,8 @@
 
 #import <Masonry/Masonry.h>
 
-@interface GenViewController : UIViewController
+@interface GenViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
+
+@property (nonatomic, strong) UITableView *tableView;
 
 @end
