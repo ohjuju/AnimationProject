@@ -98,6 +98,8 @@
 //        make.size.mas_equalTo(CGSizeMake(self.view.bounds.size.width, 50));
 //    }];
     
+    [self insertTransparentGradient];
+    
     [self.view addSubview:_testView];
     [_testView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.view);
@@ -114,6 +116,19 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - blur
+- (void) insertTransparentGradient {
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    CGFloat screenWidth  =[[UIScreen mainScreen] bounds].size.width;
+    gradient.frame = CGRectMake(0, 50, screenWidth,50);
+    gradient.colors = [NSArray arrayWithObjects:
+                       (id)[[UIColor colorWithRed:255/255 green:255/255 blue:0/255  alpha:0.7] CGColor],
+                       (id)[[UIColor colorWithRed:255/255 green:255/255 blue:0/255  alpha:0.7] CGColor], nil];
+    gradient.startPoint = CGPointMake(0.5, 0.0); // default; bottom of the view
+    gradient.endPoint = CGPointMake(0.5, 1.0);   // default; top of the view
+    [_testView.layer insertSublayer:gradient atIndex:0];
 }
 
 #pragma mark - button event
