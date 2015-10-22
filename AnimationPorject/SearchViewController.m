@@ -208,6 +208,9 @@
         make.top.equalTo(_dynamicView.mas_bottom);
         make.left.right.bottom.equalTo(self.view);
     }];
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]
+                                               initWithTarget:self action:@selector(longPressGestureRecognized:)];
+    [self.tableView addGestureRecognizer:longPress];
 }
 
 - (void)initGradientView {
@@ -242,6 +245,101 @@
             [_tableView removeGestureRecognizer:rec];
         }
     }
+}
+
+- (IBAction)longPressGestureRecognized:(id)sender {
+    
+    UILongPressGestureRecognizer *longPress = (UILongPressGestureRecognizer *)sender;
+    UIGestureRecognizerState state = longPress.state;
+    
+    CGPoint location = [longPress locationInView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
+    
+    static UIView *snapshot = nil;        ///< A snapshot of the row user is moving.
+    static NSIndexPath *sourceIndexPath = nil; ///< Initial index path, where gesture begins.
+    
+    switch (state) {
+        case UIGestureRecognizerStateBegan: {
+            if (indexPath) {
+                sourceIndexPath = indexPath;
+                
+                UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+                
+                // Take a snapshot of the selected row using helper method.
+                snapshot = [self customSnapshotFromView:cell];
+                
+                // Add the snapshot as subview, centered at cell's center...
+                __block CGPoint center = cell.center;
+                snapshot.center = center;
+                snapshot.alpha = 0.0;
+                [self.tableView addSubview:snapshot];
+                [UIView animateWithDuration:0.25 animations:^{
+                    
+                    // Offset for gesture location.
+                    center.y = location.y;
+                    snapshot.center = center;
+                    snapshot.transform = CGAffineTransformMakeScale(1.05, 1.05);
+                    snapshot.alpha = 0.98; 
+                    
+                    // Black out. 
+                    cell.backgroundColor = [UIColor whiteColor];
+                } completion:nil]; 
+            } 
+            break; 
+        } 
+        case UIGestureRecognizerStateChanged: {
+            CGPoint center = snapshot.center;
+            center.y = location.y;
+            snapshot.center = center;
+            
+            // Is destination valid and is it different from source?
+            if (indexPath && ![indexPath isEqual:sourceIndexPath]) {
+                
+                // ... update data source.
+//                [self.objects exchangeObjectAtIndex:indexPath.row withObjectAtIndex:sourceIndexPath.row];
+                
+                // ... move the rows.
+                [self.tableView moveRowAtIndexPath:sourceIndexPath toIndexPath:indexPath];
+                
+                // ... and update source so it is in sync with UI changes. 
+                sourceIndexPath = indexPath; 
+            } 
+            break; 
+        }
+        default: {
+            // Clean up.
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:sourceIndexPath];
+            [UIView animateWithDuration:0.25 animations:^{
+                
+                snapshot.center = cell.center;
+                snapshot.transform = CGAffineTransformIdentity;
+                snapshot.alpha = 0.0;
+                
+                // Undo the black-out effect we did.
+                cell.backgroundColor = [UIColor whiteColor];
+                
+            } completion:^(BOOL finished) {
+                
+                [snapshot removeFromSuperview]; 
+                snapshot = nil; 
+                
+            }]; 
+            sourceIndexPath = nil; 
+            break; 
+        }
+    }
+}
+
+- (UIView *)customSnapshotFromView:(UIView *)inputView {
+    
+    UIView *snapshot = [inputView snapshotViewAfterScreenUpdates:YES];
+    snapshot.layer.masksToBounds = NO;
+    snapshot.layer.cornerRadius = 0.0;
+    snapshot.layer.shadowOffset = CGSizeMake(-5.0, 0.0);
+    snapshot.layer.shadowRadius = 5.0;
+    snapshot.layer.shadowOpacity = 0.4;
+    
+    return snapshot;
 }
 
 - (void)tableViewDidPan:(UIPanGestureRecognizer *)rec {
@@ -292,15 +390,24 @@
                     [self.view bringSubviewToFront:_topView];
                     
                     if (_dynamicView.bounds.size.height > 0) {
-                        CGFloat alpha = 1-fabs(translation.y/_dynamicView.bounds.size.height);
-                        _dynamicView.alpha = alpha;
+                        CGFloat alphaPresentFlag = 1-fabs(translation.y/_dynamicView.bounds.size.height);
+                        _dynamicView.alpha = alphaPresentFlag;
+                        
+                        CGFloat colorPresentFlag = fabs(translation.y/_dynamicView.bounds.size.height);
+                        
+                        //background color trun green to white,title turn white to green.
+                        if (lineDynamicView.hidden == NO) {
+                            [lineBtn setBackgroundColor:[UIColor colorWithRed:(102.0+(255.0-102.0)*colorPresentFlag)/255.0 green:(161.0+(255.0-161.0)*colorPresentFlag)/255.0 blue:(115.0+(255.0-115.0)*colorPresentFlag)/255.0 alpha:1.0f]];
+                            [lineBtn setTitleColor:[UIColor colorWithRed:102.0*colorPresentFlag/255.0 green:161.0*colorPresentFlag/255.0 blue:115.0*colorPresentFlag/255.0 alpha:1.0f] forState:UIControlStateNormal];
+                        }else {
+                            [vesselBtn setBackgroundColor:[UIColor colorWithRed:(102.0+(255.0-102.0)*colorPresentFlag)/255.0 green:(161.0+(255.0-161.0)*colorPresentFlag)/255.0 blue:(115.0+(255.0-115.0)*colorPresentFlag)/255.0 alpha:1.0f]];
+                            
+                            [vesselBtn setTitleColor:[UIColor colorWithRed:102.0*colorPresentFlag/255.0 green:161.0*colorPresentFlag/255.0 blue:115.0*colorPresentFlag/255.0 alpha:1.0f] forState:UIControlStateNormal];
+                        }
+                        
                         [self.view layoutIfNeeded];
                         [_dynamicView layoutIfNeeded];
-//                        [UIView animateWithDuration:duration animations:^{
-//                            _dynamicView.alpha = alpha;
-//                            [self.view layoutIfNeeded];
-//                            [_dynamicView layoutIfNeeded];
-//                        }];
+                        
                         
                     }
                     
