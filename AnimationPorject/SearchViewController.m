@@ -284,7 +284,7 @@
                 //  1.change dynamicView orgin
                 //  2.add a blur layer
                 //  3.when translation.y == dynamic.height, blurLayer dismiss
-                NSLog(@"orgin y is : %f",fabs(translation.y));
+//                NSLog(@"orgin y is : %f",fabs(translation.y));
                 if (translation.y <= _dynamicView.bounds.size.height) {
                     [_dynamicView mas_updateConstraints:^(MASConstraintMaker *make) {
                         make.top.equalTo(_topView.mas_bottom).offset(translation.y);
@@ -292,11 +292,10 @@
                     [self.view bringSubviewToFront:_topView];
                     
                     if (_dynamicView.bounds.size.height > 0) {
-                        CGFloat duration = translation.y/_dynamicView.bounds.size.height;
-                        CGFloat alpha = 1-(translation.y/_dynamicView.bounds.size.height);
-//                        _dynamicView.alpha = alpha;
-//                        [self.view layoutIfNeeded];
-//                        [_dynamicView layoutIfNeeded];
+                        CGFloat alpha = 1-fabs(translation.y/_dynamicView.bounds.size.height);
+                        _dynamicView.alpha = alpha;
+                        [self.view layoutIfNeeded];
+                        [_dynamicView layoutIfNeeded];
 //                        [UIView animateWithDuration:duration animations:^{
 //                            _dynamicView.alpha = alpha;
 //                            [self.view layoutIfNeeded];
