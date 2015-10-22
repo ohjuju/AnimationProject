@@ -324,16 +324,16 @@
 #pragma mark - blur
 - (void) insertTransparentGradient {
     gradientView = [[UIView alloc] init];
-    gradientView.backgroundColor = [UIColor whiteColor];
-//    gradient = [CAGradientLayer layer];
-//    CGFloat screenWidth  =[[UIScreen mainScreen] bounds].size.width;
-//    gradient.frame = CGRectMake(0, 0, screenWidth,50);
-//    gradient.colors = [NSArray arrayWithObjects:
-//                       (id)[[UIColor colorWithRed:255/255 green:255/255 blue:255/255  alpha:1.0] CGColor],
-//                       (id)[[UIColor colorWithRed:255/255 green:255/255 blue:255/255  alpha:0.3] CGColor], nil];
-//    gradient.startPoint = CGPointMake(0.5, 0.0); // default; bottom of the view
-//    gradient.endPoint = CGPointMake(0.5, 1.0);   // default; top of the view
-//    [gradientView.layer insertSublayer:gradient atIndex:0];
+//    gradientView.backgroundColor = [UIColor whiteColor];
+    gradient = [CAGradientLayer layer];
+    CGFloat screenWidth  =[[UIScreen mainScreen] bounds].size.width;
+    gradient.frame = CGRectMake(0, 0, screenWidth,50);
+    gradient.colors = [NSArray arrayWithObjects:
+                       (id)[[UIColor colorWithRed:255/255 green:255/255 blue:255/255  alpha:1.0] CGColor],
+                       (id)[[UIColor colorWithRed:255/255 green:255/255 blue:255/255  alpha:0.3] CGColor], nil];
+    gradient.startPoint = CGPointMake(0.5, 0.0); // default; bottom of the view
+    gradient.endPoint = CGPointMake(0.5, 1.0);   // default; top of the view
+    [gradientView.layer insertSublayer:gradient atIndex:0];
     [self.view addSubview:gradientView];
     [self.view bringSubviewToFront:gradientView];
     [gradientView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -390,11 +390,12 @@
         
         [_testView layoutIfNeeded];
         [animationView layoutIfNeeded];
+        [testLabel layoutIfNeeded];
+        [testLabel1 layoutIfNeeded];
+        [testLabel2 layoutIfNeeded];
+        
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
-        testLabel.hidden = YES;
-        testLabel1.hidden = YES;
-        testLabel2.hidden = YES;
         [gradientView removeFromSuperview];
         
         if (animationView.bounds.size.height > 0) {
