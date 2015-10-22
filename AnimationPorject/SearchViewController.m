@@ -177,7 +177,7 @@
     }];
 }
 
-#pragma mark - Gesture 
+#pragma mark - Gesture
 - (void)initGestureRecognizer {
     //addgensure
     recognizer = [UIPanGestureRecognizer new];
@@ -186,7 +186,11 @@
 }
 
 - (void)removeGestureRecognizer {
-    [_tableView removeGestureRecognizer:recognizer];
+    for (UIPanGestureRecognizer *rec in _tableView.gestureRecognizers) {
+        if ([rec isEqual:recognizer]) {
+            [_tableView removeGestureRecognizer:rec];
+        }
+    }
 }
 
 - (void)tableViewDidPan:(UIPanGestureRecognizer *)rec {
@@ -196,57 +200,64 @@
     CGPoint translation = [rec translationInView:_tableView];
     if (fabs(translation.y) > gestureMinimumTranslation)
     {
-//        BOOL gestureVertical = NO;
-//        if (translation.x ==0.0) {
-//            gestureVertical = YES;
-//        } else {
-//            gestureVertical = (fabs(translation.y / translation.x) >5.0);
-//        }
-//        if (gestureVertical)
-//        {
-            if (translation.y >0.0) {
-                //down
-            }else {
-                //up
-//                CGFloat animationViewHeight = animationView.bounds.size.height - fabs(translation.y);
-//                CGFloat currentAnimationViewHeight = (animationViewHeight<0)?0:animationViewHeight;
-//                NSLog(@"currentAnimationViewHeight is :%f",currentAnimationViewHeight);
-//                [animationView mas_updateConstraints:^(MASConstraintMaker *make) {
-//                    make.top.equalTo(_testView.mas_bottom);
-//                    make.height.mas_equalTo(currentAnimationViewHeight);
-//                }];
+        if (translation.y >0.0) {
+            //down
+        }else {
+            //up
+            //                CGFloat animationViewHeight = animationView.bounds.size.height - fabs(translation.y);
+            //                CGFloat currentAnimationViewHeight = (animationViewHeight<0)?0:animationViewHeight;
+            //                NSLog(@"currentAnimationViewHeight is :%f",currentAnimationViewHeight);
+            //                [animationView mas_updateConstraints:^(MASConstraintMaker *make) {
+            //                    make.top.equalTo(_testView.mas_bottom);
+            //                    make.height.mas_equalTo(currentAnimationViewHeight);
+            //                }];
+            
+            //                CGFloat dynamicViewOrginY = _dynamicView.bounds.origin.y - fabs(translation.y);
+            
+            //if user upward > gestureMinimumTranslation,_dynamicView will hidden.
+            if (fabs(translation.y) > gestureMinimumTranslation && rec.state == UIGestureRecognizerStateEnded) {
+                [UIView animateWithDuration:0.2f animations:^{
+                    [self decreseDynamicViewHeight];
+                    _dynamicView.alpha = 0.0f;
+                    lineDynamicView.alpha = 0.0f;
+                    vesselDynamicView.alpha = 0.0f;
+                    [lineBtn setBackgroundColor:[UIColor whiteColor]];
+                    [lineBtn setTitleColor:[UIColor colorWithRed:102.0/255.0 green:161.0/255.0 blue:115.0/255.0 alpha:1.0f] forState:UIControlStateNormal];
+                    [vesselBtn setBackgroundColor:[UIColor whiteColor]];
+                    [vesselBtn setTitleColor:[UIColor colorWithRed:102.0/255.0 green:161.0/255.0 blue:115.0/255.0 alpha:1.0f] forState:UIControlStateNormal];
+                    
+                    [self.view layoutIfNeeded];
+                    [_dynamicView layoutIfNeeded];
+                    [lineDynamicView layoutIfNeeded];
+                    [vesselDynamicView layoutIfNeeded];
+                } completion:^(BOOL finished) {
+                    [_dynamicView setHidden:YES];
+                    [self removeGestureRecognizer];
+                    [_tableView setScrollEnabled:YES];
+                    lineBtn.enabled = YES;
+                    vesselBtn.enabled = YES;
+                }];
+            } else if (rec.state == UIGestureRecognizerStateBegan || rec.state == UIGestureRecognizerStateChanged) {
                 
-//                CGFloat dynamicViewOrginY = _dynamicView.bounds.origin.y - fabs(translation.y);
+                //                [_tableView setScrollEnabled:YES];
                 
+                //when pan, what we need do:
+                //  1.change dynamicView orgin
+                //  2.add a blur view
+                //  3.when translation.y == dynamic.height, blurView dismiss
                 NSLog(@"orgin y is : %f",fabs(translation.y));
-                //if user upward > gestureMinimumTranslation,_dynamicView will hidden.
-                if (fabs(translation.y) > gestureMinimumTranslation && rec.state == UIGestureRecognizerStateEnded) {
-                    [UIView animateWithDuration:0.2f animations:^{
-                        [self decreseDynamicViewHeight];
-                        _dynamicView.alpha = 0.0f;
-                        lineDynamicView.alpha = 0.0f;
-                        vesselDynamicView.alpha = 0.0f;
-                        
-                        [self.view layoutIfNeeded];
-                        [_dynamicView layoutIfNeeded];
-                        [lineDynamicView layoutIfNeeded];
-                        [vesselDynamicView layoutIfNeeded];
-                    } completion:^(BOOL finished) {
-                        [_dynamicView setHidden:YES];
-                        if (recognizer) {
-                            [self removeGestureRecognizer];
-                        }
-                        [_tableView setScrollEnabled:YES];
-                    }];
-                } else if (rec.state == UIGestureRecognizerStateBegan || rec.state == UIGestureRecognizerStateChanged) {
-                    //when pan, what we need do:
-                    //1.change dynamicView orgin
-                    //2.add a blur view
-                    //3.when translation.y == dynamic.height, blurView dismiss
-                }
-
-//                
-//            }
+                //                if (translation.y <= _dynamicView.bounds.size.height) {
+                //                    [_dynamicView mas_updateConstraints:^(MASConstraintMaker *make) {
+                //                        make.top.equalTo(_topView).offset(translation.y);
+                //                    }];
+                //                    _dynamicView.alpha = 0.0f;
+                //                }else {
+                //                    [_dynamicView mas_updateConstraints:^(MASConstraintMaker *make) {
+                //                        make.top.equalTo(_topView).offset(_dynamicView.bounds.size.height);
+                //                    }];
+                //                    _dynamicView.alpha = 0.0f;
+                //                }
+            }
         }
     }
 }
@@ -272,6 +283,10 @@
 #pragma mark - button event
 - (void)vesselBtnClick:(UIButton *)btn {
     NSLog(@"vesselBtnClick");
+    
+    vesselBtn.enabled = NO;
+    lineBtn.enabled = YES;
+    
     _dynamicView.hidden = NO;
     lineDynamicView.hidden = YES;
     vesselDynamicView.hidden = NO;
@@ -289,15 +304,18 @@
         [lineDynamicView layoutIfNeeded];
         [vesselDynamicView layoutIfNeeded];
     } completion:^(BOOL finished) {
-//        if (!recognizer) {
-            [self initGestureRecognizer];
-            [_tableView setScrollEnabled:NO];
-//        }
+        [self removeGestureRecognizer];
+        [self initGestureRecognizer];
+        //            [_tableView setScrollEnabled:NO];
     }];
 }
 
 - (void)lineBtnClick:(UIButton *)btn {
     NSLog(@"lineBtnClick");
+    
+    vesselBtn.enabled = YES;
+    lineBtn.enabled = NO;
+    
     _dynamicView.hidden = NO;
     lineDynamicView.hidden = NO;
     vesselDynamicView.hidden = YES;
@@ -315,11 +333,11 @@
         [lineDynamicView layoutIfNeeded];
         [vesselDynamicView layoutIfNeeded];
     } completion:^(BOOL finished) {
-//        if (!recognizer) {
-            [self initGestureRecognizer];
-            [_tableView setScrollEnabled:NO];
-//        }
+        [self removeGestureRecognizer];
+        [self initGestureRecognizer];
+        //            [_tableView setScrollEnabled:NO];
     }];
+    
 }
 
 #pragma mark - tableview datasource delegate and datasource
@@ -328,7 +346,7 @@
         if (!recognizer) {
             [self initGestureRecognizer];
         }
-        [_tableView setScrollEnabled:NO];
+        //        [_tableView setScrollEnabled:NO];
     }
 }
 
@@ -345,7 +363,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     }
-    cell.textLabel.text = @"test";
+    cell.textLabel.text = [NSString stringWithFormat:@"test %ld",(long)indexPath.row];
     cell.showsReorderControl = YES;
     return cell;
 }
@@ -376,13 +394,13 @@
 //}
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end
