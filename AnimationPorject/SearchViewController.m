@@ -306,7 +306,7 @@
     } completion:^(BOOL finished) {
         [self removeGestureRecognizer];
         [self initGestureRecognizer];
-        //            [_tableView setScrollEnabled:NO];
+        [_tableView setScrollEnabled:NO];
     }];
 }
 
@@ -335,7 +335,7 @@
     } completion:^(BOOL finished) {
         [self removeGestureRecognizer];
         [self initGestureRecognizer];
-        //            [_tableView setScrollEnabled:NO];
+        [_tableView setScrollEnabled:NO];
     }];
     
 }
@@ -346,7 +346,7 @@
         if (!recognizer) {
             [self initGestureRecognizer];
         }
-        //        [_tableView setScrollEnabled:NO];
+        [_tableView setScrollEnabled:NO];
     }
 }
 
