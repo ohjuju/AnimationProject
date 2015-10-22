@@ -237,7 +237,7 @@
 }
 
 - (void)removeGestureRecognizer {
-    for (UIPanGestureRecognizer *rec in _tableView.gestureRecognizers) {
+    for (UIGestureRecognizer *rec in _tableView.gestureRecognizers) {
         if ([rec isEqual:recognizer]) {
             [_tableView removeGestureRecognizer:rec];
         }
@@ -246,18 +246,17 @@
 
 - (void)tableViewDidPan:(UIPanGestureRecognizer *)rec {
     
-    CGFloat const gestureMinimumTranslation = 10.0f;
+//    CGFloat const gestureMinimumTranslation = 50.0f;
     
     CGPoint translation = [rec translationInView:_tableView];
-    if (fabs(translation.y) > gestureMinimumTranslation)
-    {
         if (translation.y >0.0) {
             //down
         }else {
             //up
             //if user upward > gestureMinimumTranslation,_dynamicView will hidden.
-            if (fabs(translation.y) > gestureMinimumTranslation && rec.state == UIGestureRecognizerStateEnded) {
-                [UIView animateWithDuration:0.5f animations:^{
+            if (rec.state == UIGestureRecognizerStateEnded && fabs(translation.y) > 20.0f) {
+                
+                [UIView animateWithDuration:0.2f animations:^{
                     [self decreseDynamicViewHeight];
                     _dynamicView.alpha = 0.0f;
                     lineDynamicView.alpha = 0.0f;
@@ -281,21 +280,6 @@
                 }];
             } else if (rec.state == UIGestureRecognizerStateBegan || rec.state == UIGestureRecognizerStateChanged) {
                 
-                /*
-                 
-                 //                CGFloat animationViewHeight = animationView.bounds.size.height - fabs(translation.y);
-                 //                CGFloat currentAnimationViewHeight = (animationViewHeight<0)?0:animationViewHeight;
-                 //                NSLog(@"currentAnimationViewHeight is :%f",currentAnimationViewHeight);
-                 //                [animationView mas_updateConstraints:^(MASConstraintMaker *make) {
-                 //                    make.top.equalTo(_testView.mas_bottom);
-                 //                    make.height.mas_equalTo(currentAnimationViewHeight);
-                 //                }];
-                 
-                 //                CGFloat dynamicViewOrginY = _dynamicView.bounds.origin.y - fabs(translation.y);
-                 
-                 */
-                
-                
                 //when pan, what we need do:
                 //  1.change dynamicView orgin
                 //  2.add a blur layer
@@ -306,12 +290,26 @@
                         make.top.equalTo(_topView.mas_bottom).offset(translation.y);
                     }];
                     [self.view bringSubviewToFront:_topView];
+                    
+                    if (_dynamicView.bounds.size.height > 0) {
+                        CGFloat duration = translation.y/_dynamicView.bounds.size.height;
+                        CGFloat alpha = 1-(translation.y/_dynamicView.bounds.size.height);
+//                        _dynamicView.alpha = alpha;
+//                        [self.view layoutIfNeeded];
+//                        [_dynamicView layoutIfNeeded];
+//                        [UIView animateWithDuration:duration animations:^{
+//                            _dynamicView.alpha = alpha;
+//                            [self.view layoutIfNeeded];
+//                            [_dynamicView layoutIfNeeded];
+//                        }];
+                        
+                    }
+                    
                 } else {
                     [self decreseDynamicViewHeight];
                 }
             }
         }
-    }
 }
 
 
