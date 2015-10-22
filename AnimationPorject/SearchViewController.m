@@ -16,6 +16,8 @@
 @property (nonatomic, strong) UIView *lineDynamicView;
 @property (nonatomic, strong) UIView *vesselDynamicView;
 
+@property (nonatomic, strong) UIView *gradientView;
+
 @property (nonatomic, strong) UIPanGestureRecognizer *recognizer;
 @end
 
@@ -27,12 +29,14 @@
 @synthesize lineDynamicView;
 @synthesize vesselDynamicView;
 
+@synthesize gradientView;
+
 @synthesize recognizer;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBar.translucent = NO;
-    self.title = @"BigSchedule";
+    self.title = @"Demo";
     
     [self initTopView];
     [self initDynamicViewByDefault];
@@ -66,7 +70,7 @@
     [lineBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_topView).offset(10);
         make.left.equalTo(_topView).offset(10);
-        make.size.mas_equalTo(CGSizeMake(150, 50));
+        make.size.mas_equalTo(CGSizeMake(150, 49));
     }];
     
     //vesselBtn
@@ -79,7 +83,15 @@
     [vesselBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_topView).offset(10);
         make.right.equalTo(_topView).offset(-10);
-        make.size.mas_equalTo(CGSizeMake(150, 50));
+        make.size.mas_equalTo(CGSizeMake(150, 49));
+    }];
+    
+    UIView *bottomView = [UIView new];
+    bottomView.backgroundColor = [UIColor lightGrayColor];
+    [_topView addSubview:bottomView];
+    [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(0.5);
+        make.left.right.bottom.equalTo(_topView);
     }];
 }
 
@@ -98,7 +110,7 @@
     bottomView.backgroundColor = [UIColor lightGrayColor];
     [_dynamicView addSubview:bottomView];
     [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(1);
+        make.height.mas_equalTo(0.5);
         make.left.right.bottom.equalTo(_dynamicView);
     }];
     
@@ -112,10 +124,12 @@
     [_dynamicView addSubview:lineDynamicView];
     [lineDynamicView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.equalTo(_dynamicView);
-        make.bottom.equalTo(_dynamicView).offset(1);
+//        make.bottom.equalTo(_dynamicView).offset(1);
+        make.height.mas_equalTo(150);
     }];
     //test
     UITextField *t1 = [UITextField new];
+    [t1 setEnabled:NO];
     t1.placeholder = @"line";
     t1.borderStyle = UITextBorderStyleRoundedRect;
     [lineDynamicView addSubview:t1];
@@ -126,7 +140,9 @@
     }];
     UIButton *b1 = [UIButton buttonWithType:UIButtonTypeSystem];
     [b1 setTitle:@"Line" forState:UIControlStateNormal];
-    [b1 setBackgroundColor:[UIColor greenColor]];
+//    [b1 setBackgroundColor:[UIColor greenColor]];
+    [b1 setBackgroundColor:[UIColor colorWithRed:102.0/255.0 green:161.0/255.0 blue:115.0/255.0 alpha:1.0f]];
+    [b1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [lineDynamicView addSubview:b1];
     [b1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(t1.mas_bottom).offset(10);
@@ -142,10 +158,12 @@
     [_dynamicView addSubview:vesselDynamicView];
     [vesselDynamicView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.equalTo(_dynamicView);
-        make.bottom.equalTo(_dynamicView).offset(1);
+//        make.bottom.equalTo(_dynamicView).offset(1);
+        make.height.mas_equalTo(200);
     }];
     //test
     UITextField *t2 = [UITextField new];
+    [t2 setEnabled:NO];
     t2.placeholder = @"vessel";
     t2.borderStyle = UITextBorderStyleRoundedRect;
     [vesselDynamicView addSubview:t2];
@@ -154,12 +172,26 @@
         make.right.equalTo(vesselDynamicView).offset(-10);
         make.height.mas_equalTo(50);
     }];
+    UITextField *t3 = [UITextField new];
+    [t3 setEnabled:NO];
+    t3.placeholder = @"vessel";
+    t3.borderStyle = UITextBorderStyleRoundedRect;
+    [vesselDynamicView addSubview:t3];
+    [t3 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(t2.mas_bottom).offset(10);
+        make.left.equalTo(vesselDynamicView).offset(10);
+        make.right.equalTo(vesselDynamicView).offset(-10);
+        make.height.mas_equalTo(50);
+    }];
+    
     UIButton *b2 = [UIButton buttonWithType:UIButtonTypeSystem];
     [b2 setTitle:@"Vessel" forState:UIControlStateNormal];
-    [b2 setBackgroundColor:[UIColor greenColor]];
+//    [b2 setBackgroundColor:[UIColor greenColor]];
+    [b2 setBackgroundColor:[UIColor colorWithRed:102.0/255.0 green:161.0/255.0 blue:115.0/255.0 alpha:1.0f]];
+    [b2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [vesselDynamicView addSubview:b2];
     [b2 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(t2.mas_bottom).offset(10);
+        make.top.equalTo(t3.mas_bottom).offset(10);
         make.left.equalTo(vesselDynamicView).offset(10);
         make.right.equalTo(vesselDynamicView).offset(-10);
         make.height.mas_equalTo(50);
@@ -174,6 +206,24 @@
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_dynamicView.mas_bottom);
         make.left.right.bottom.equalTo(self.view);
+    }];
+}
+
+- (void)initGradientView {
+    //layer
+    gradientView = [UIView new];
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    gradient.frame = gradientView.frame;
+    gradient.colors = [NSArray arrayWithObjects:
+                       (id)[[UIColor colorWithRed:255/255 green:255/255 blue:255/255  alpha:1.0] CGColor],
+                       (id)[[UIColor colorWithRed:255/255 green:255/255 blue:255/255  alpha:0.3] CGColor], nil];
+    gradient.startPoint = CGPointMake(0.5, 0.0); // default; bottom of the view
+    gradient.endPoint = CGPointMake(0.5, 1.0);   // default; top of the view
+    [gradientView.layer insertSublayer:gradient atIndex:0];
+    [_dynamicView addSubview:gradientView];
+    [_dynamicView bringSubviewToFront:gradientView];
+    [gradientView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.left.right.equalTo(_dynamicView);
     }];
 }
 
@@ -204,16 +254,6 @@
             //down
         }else {
             //up
-            //                CGFloat animationViewHeight = animationView.bounds.size.height - fabs(translation.y);
-            //                CGFloat currentAnimationViewHeight = (animationViewHeight<0)?0:animationViewHeight;
-            //                NSLog(@"currentAnimationViewHeight is :%f",currentAnimationViewHeight);
-            //                [animationView mas_updateConstraints:^(MASConstraintMaker *make) {
-            //                    make.top.equalTo(_testView.mas_bottom);
-            //                    make.height.mas_equalTo(currentAnimationViewHeight);
-            //                }];
-            
-            //                CGFloat dynamicViewOrginY = _dynamicView.bounds.origin.y - fabs(translation.y);
-            
             //if user upward > gestureMinimumTranslation,_dynamicView will hidden.
             if (fabs(translation.y) > gestureMinimumTranslation && rec.state == UIGestureRecognizerStateEnded) {
                 [UIView animateWithDuration:0.2f animations:^{
@@ -236,15 +276,29 @@
                     [_tableView setScrollEnabled:YES];
                     lineBtn.enabled = YES;
                     vesselBtn.enabled = YES;
+                    [self removeGradientView];
                 }];
             } else if (rec.state == UIGestureRecognizerStateBegan || rec.state == UIGestureRecognizerStateChanged) {
                 
-                //                [_tableView setScrollEnabled:YES];
+                /*
+                 
+                 //                CGFloat animationViewHeight = animationView.bounds.size.height - fabs(translation.y);
+                 //                CGFloat currentAnimationViewHeight = (animationViewHeight<0)?0:animationViewHeight;
+                 //                NSLog(@"currentAnimationViewHeight is :%f",currentAnimationViewHeight);
+                 //                [animationView mas_updateConstraints:^(MASConstraintMaker *make) {
+                 //                    make.top.equalTo(_testView.mas_bottom);
+                 //                    make.height.mas_equalTo(currentAnimationViewHeight);
+                 //                }];
+                 
+                 //                CGFloat dynamicViewOrginY = _dynamicView.bounds.origin.y - fabs(translation.y);
+                 
+                 */
+                
                 
                 //when pan, what we need do:
                 //  1.change dynamicView orgin
-                //  2.add a blur view
-                //  3.when translation.y == dynamic.height, blurView dismiss
+                //  2.add a blur layer
+                //  3.when translation.y == dynamic.height, blurLayer dismiss
                 NSLog(@"orgin y is : %f",fabs(translation.y));
                 //                if (translation.y <= _dynamicView.bounds.size.height) {
                 //                    [_dynamicView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -257,6 +311,9 @@
                 //                    }];
                 //                    _dynamicView.alpha = 0.0f;
                 //                }
+                if (!gradientView) {
+                    [self initGradientView];
+                }
             }
         }
     }
@@ -264,11 +321,11 @@
 
 
 #pragma mark - view operation
-- (void)increaseDynamicViewHeight {
+- (void)increaseDynamicViewHeightTo:(CGFloat)height {
     [_dynamicView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_topView.mas_bottom);
         make.left.right.equalTo(self.view);
-        make.height.mas_equalTo(150);
+        make.height.mas_equalTo(height+1);
     }];
 }
 
@@ -278,6 +335,10 @@
         make.left.right.equalTo(self.view);
         make.height.mas_equalTo(0);
     }];
+}
+
+- (void)removeGradientView {
+    [gradientView removeFromSuperview];
 }
 
 #pragma mark - button event
@@ -291,7 +352,7 @@
     lineDynamicView.hidden = YES;
     vesselDynamicView.hidden = NO;
     [UIView animateWithDuration:0.5f animations:^{
-        [self increaseDynamicViewHeight];
+        [self increaseDynamicViewHeightTo:vesselDynamicView.bounds.size.height];
         lineDynamicView.alpha = 0.0f;
         vesselDynamicView.alpha = 1.0f;
         _dynamicView.alpha = 1.0f;
@@ -320,7 +381,7 @@
     lineDynamicView.hidden = NO;
     vesselDynamicView.hidden = YES;
     [UIView animateWithDuration:0.5f animations:^{
-        [self increaseDynamicViewHeight];
+        [self increaseDynamicViewHeightTo:lineDynamicView.bounds.size.height];
         lineDynamicView.alpha = 1.0f;
         vesselDynamicView.alpha = 0.0f;
         _dynamicView.alpha = 1.0f;
