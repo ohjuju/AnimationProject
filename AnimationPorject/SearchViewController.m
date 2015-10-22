@@ -98,6 +98,7 @@
 - (void)initDynamicViewByDefault {
     _dynamicView = [UIView new];
     _dynamicView.alpha = 1.0f;
+    _dynamicView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_dynamicView];
     [_dynamicView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_topView.mas_bottom);
@@ -256,7 +257,7 @@
             //up
             //if user upward > gestureMinimumTranslation,_dynamicView will hidden.
             if (fabs(translation.y) > gestureMinimumTranslation && rec.state == UIGestureRecognizerStateEnded) {
-                [UIView animateWithDuration:0.2f animations:^{
+                [UIView animateWithDuration:0.5f animations:^{
                     [self decreseDynamicViewHeight];
                     _dynamicView.alpha = 0.0f;
                     lineDynamicView.alpha = 0.0f;
@@ -300,19 +301,13 @@
                 //  2.add a blur layer
                 //  3.when translation.y == dynamic.height, blurLayer dismiss
                 NSLog(@"orgin y is : %f",fabs(translation.y));
-                //                if (translation.y <= _dynamicView.bounds.size.height) {
-                //                    [_dynamicView mas_updateConstraints:^(MASConstraintMaker *make) {
-                //                        make.top.equalTo(_topView).offset(translation.y);
-                //                    }];
-                //                    _dynamicView.alpha = 0.0f;
-                //                }else {
-                //                    [_dynamicView mas_updateConstraints:^(MASConstraintMaker *make) {
-                //                        make.top.equalTo(_topView).offset(_dynamicView.bounds.size.height);
-                //                    }];
-                //                    _dynamicView.alpha = 0.0f;
-                //                }
-                if (!gradientView) {
-                    [self initGradientView];
+                if (translation.y <= _dynamicView.bounds.size.height) {
+                    [_dynamicView mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.top.equalTo(_topView.mas_bottom).offset(translation.y);
+                    }];
+                    [self.view bringSubviewToFront:_topView];
+                } else {
+                    [self decreseDynamicViewHeight];
                 }
             }
         }
