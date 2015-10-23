@@ -17,6 +17,7 @@
 		0D1BF47E1BD3A48800F4BBE5 /* nvdi.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0D1BF47D1BD3A48800F4BBE5 /* nvdi.jpg */; };
 		0D1BF4811BD3BF8600F4BBE5 /* GenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BF4801BD3BF8600F4BBE5 /* GenViewController.m */; };
 		428FE824F33065514632CB6F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11FEA12B3277B170D9BA3238 /* libPods.a */; };
+		B11025241BDA25AB0012CC41 /* GradientViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B11025231BDA25AB0012CC41 /* GradientViewController.m */; };
 		B11B02581BD872A20087DDB8 /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B11B02571BD872A20087DDB8 /* SearchViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +59,8 @@
 		0D1BF4801BD3BF8600F4BBE5 /* GenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenViewController.m; sourceTree = "<group>"; };
 		11FEA12B3277B170D9BA3238 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		369E8A715A0F07E740DA07B6 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		B11025221BDA25AB0012CC41 /* GradientViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientViewController.h; sourceTree = "<group>"; };
+		B11025231BDA25AB0012CC41 /* GradientViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientViewController.m; sourceTree = "<group>"; };
 		B11B02561BD872A20087DDB8 /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
 		B11B02571BD872A20087DDB8 /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewController.m; sourceTree = "<group>"; };
 		B80DD0C17B60DFE4D803C2C1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -123,6 +126,8 @@
 				0D1BF4801BD3BF8600F4BBE5 /* GenViewController.m */,
 				B11B02561BD872A20087DDB8 /* SearchViewController.h */,
 				B11B02571BD872A20087DDB8 /* SearchViewController.m */,
+				B11025221BDA25AB0012CC41 /* GradientViewController.h */,
+				B11025231BDA25AB0012CC41 /* GradientViewController.m */,
 				0D1BF4531BD3A21600F4BBE5 /* Main.storyboard */,
 				0D1BF4561BD3A21600F4BBE5 /* Assets.xcassets */,
 				0D1BF45B1BD3A21600F4BBE5 /* Info.plist */,
@@ -355,6 +360,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B11025241BDA25AB0012CC41 /* GradientViewController.m in Sources */,
 				0D1BF4521BD3A21600F4BBE5 /* ViewController.m in Sources */,
 				0D1BF44F1BD3A21600F4BBE5 /* AppDelegate.m in Sources */,
 				0D1BF44C1BD3A21600F4BBE5 /* main.m in Sources */,
