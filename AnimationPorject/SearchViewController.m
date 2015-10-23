@@ -237,8 +237,8 @@
     
     
     CAGradientLayer *gradient = [CAGradientLayer layer];
-    gradient.frame = gradientView.bounds;
-    NSLog(@"%f",gradientView.bounds.size.width);
+    gradient.frame = CGRectMake(0, 0, self.view.bounds.size.width, 50);
+    NSLog(@"%f",gradient.bounds.size.width);
 //    gradient.colors = [NSArray arrayWithObjects:
 //                       (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:1.0] CGColor],
 //                       (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.8] CGColor], nil];
@@ -249,7 +249,7 @@
                           (__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.7].CGColor,
                           (__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.5].CGColor];
     gradient.locations = @[@(0.25),@(0.5),@(0.75)];
-    gradient.startPoint = CGPointMake(0.5, 0);
+    gradient.startPoint = CGPointMake(0.5, 0.0);
     gradient.endPoint = CGPointMake(0.5, 1.0);
 
     [gradientView.layer insertSublayer:gradient atIndex:0];
@@ -423,7 +423,6 @@
                 if (_dynamicView.bounds.size.height > 0) {
                     
                     gradientView.hidden = NO;
-                    
 //                    CGFloat alphaPresentFlag = 1-fabs(translation.y/_dynamicView.bounds.size.height);
                     //                        _dynamicView.alpha = alphaPresentFlag;
                     
