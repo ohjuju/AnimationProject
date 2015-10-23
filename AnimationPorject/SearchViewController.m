@@ -203,6 +203,14 @@
     _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.dataSource = self;
     _tableView.delegate = self;
+    
+    //refresh
+    _tableView.header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        NSLog(@"mjrefresh");
+        [_tableView reloadData];
+        [_tableView.header endRefreshing];
+    }];
+    
     [self.view addSubview:_tableView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_dynamicView.mas_bottom);
@@ -231,16 +239,28 @@
     }];
 }
 
+- (UIView *)customSnapshotFromView:(UIView *)inputView {
+    
+    UIView *snapshot = [inputView snapshotViewAfterScreenUpdates:YES];
+    snapshot.layer.masksToBounds = NO;
+    snapshot.layer.cornerRadius = 0.0;
+    snapshot.layer.shadowOffset = CGSizeMake(-5.0, 0.0);
+    snapshot.layer.shadowRadius = 5.0;
+    snapshot.layer.shadowOpacity = 0.4;
+    
+    return snapshot;
+}
+
 #pragma mark - Gesture
-- (void)initGestureRecognizer {
+- (void)initPanGestureRecognizer {
     //addgensure
     recognizer = [UIPanGestureRecognizer new];
     [_tableView addGestureRecognizer:recognizer];
     [recognizer addTarget:self action:@selector(tableViewDidPan:)];
 }
 
-- (void)removeGestureRecognizer {
-    for (UIGestureRecognizer *rec in _tableView.gestureRecognizers) {
+- (void)removePanGestureRecognizer {
+    for (UIPanGestureRecognizer *rec in _tableView.gestureRecognizers) {
         if ([rec isEqual:recognizer]) {
             [_tableView removeGestureRecognizer:rec];
         }
@@ -330,18 +350,6 @@
     }
 }
 
-- (UIView *)customSnapshotFromView:(UIView *)inputView {
-    
-    UIView *snapshot = [inputView snapshotViewAfterScreenUpdates:YES];
-    snapshot.layer.masksToBounds = NO;
-    snapshot.layer.cornerRadius = 0.0;
-    snapshot.layer.shadowOffset = CGSizeMake(-5.0, 0.0);
-    snapshot.layer.shadowRadius = 5.0;
-    snapshot.layer.shadowOpacity = 0.4;
-    
-    return snapshot;
-}
-
 - (void)tableViewDidPan:(UIPanGestureRecognizer *)rec {
     
 //    CGFloat const gestureMinimumTranslation = 50.0f;
@@ -370,7 +378,7 @@
                     [vesselDynamicView layoutIfNeeded];
                 } completion:^(BOOL finished) {
                     [_dynamicView setHidden:YES];
-                    [self removeGestureRecognizer];
+                    [self removePanGestureRecognizer];
                     [_tableView setScrollEnabled:YES];
                     lineBtn.enabled = YES;
                     vesselBtn.enabled = YES;
@@ -378,10 +386,6 @@
                 }];
             } else if (rec.state == UIGestureRecognizerStateBegan || rec.state == UIGestureRecognizerStateChanged) {
                 
-                //when pan, what we need do:
-                //  1.change dynamicView orgin
-                //  2.add a blur layer
-                //  3.when translation.y == dynamic.height, blurLayer dismiss
 //                NSLog(@"orgin y is : %f",fabs(translation.y));
                 if (translation.y <= _dynamicView.bounds.size.height) {
                     [_dynamicView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -390,19 +394,22 @@
                     [self.view bringSubviewToFront:_topView];
                     
                     if (_dynamicView.bounds.size.height > 0) {
+                        
                         CGFloat alphaPresentFlag = 1-fabs(translation.y/_dynamicView.bounds.size.height);
                         _dynamicView.alpha = alphaPresentFlag;
                         
                         CGFloat colorPresentFlag = fabs(translation.y/_dynamicView.bounds.size.height);
                         
+                        UIColor *btnChangeWithAnimationBackgroundColor = [UIColor colorWithRed:(102.0+(255.0-102.0)*colorPresentFlag)/255.0 green:(161.0+(255.0-161.0)*colorPresentFlag)/255.0 blue:(115.0+(255.0-115.0)*colorPresentFlag)/255.0 alpha:1.0f];
+                        UIColor *btnChangeWithAnimationTitleColor = [UIColor colorWithRed:(255.0-(255.0-102.0)*colorPresentFlag)/255.0 green:(255.0-(255.0-161.0)*colorPresentFlag)/255.0 blue:(255.0-(255.0-115.0)*colorPresentFlag)/255.0 alpha:1.0f];
+                        
                         //background color trun green to white,title turn white to green.
                         if (lineDynamicView.hidden == NO) {
-                            [lineBtn setBackgroundColor:[UIColor colorWithRed:(102.0+(255.0-102.0)*colorPresentFlag)/255.0 green:(161.0+(255.0-161.0)*colorPresentFlag)/255.0 blue:(115.0+(255.0-115.0)*colorPresentFlag)/255.0 alpha:1.0f]];
-                            [lineBtn setTitleColor:[UIColor colorWithRed:102.0*colorPresentFlag/255.0 green:161.0*colorPresentFlag/255.0 blue:115.0*colorPresentFlag/255.0 alpha:1.0f] forState:UIControlStateNormal];
+                            [lineBtn setBackgroundColor:btnChangeWithAnimationBackgroundColor];
+                            [lineBtn setTitleColor:btnChangeWithAnimationTitleColor forState:UIControlStateNormal];
                         }else {
-                            [vesselBtn setBackgroundColor:[UIColor colorWithRed:(102.0+(255.0-102.0)*colorPresentFlag)/255.0 green:(161.0+(255.0-161.0)*colorPresentFlag)/255.0 blue:(115.0+(255.0-115.0)*colorPresentFlag)/255.0 alpha:1.0f]];
-                            
-                            [vesselBtn setTitleColor:[UIColor colorWithRed:102.0*colorPresentFlag/255.0 green:161.0*colorPresentFlag/255.0 blue:115.0*colorPresentFlag/255.0 alpha:1.0f] forState:UIControlStateNormal];
+                            [vesselBtn setBackgroundColor:btnChangeWithAnimationBackgroundColor];
+                            [vesselBtn setTitleColor:btnChangeWithAnimationTitleColor forState:UIControlStateNormal];
                         }
                         
                         [self.view layoutIfNeeded];
@@ -464,8 +471,8 @@
         [lineDynamicView layoutIfNeeded];
         [vesselDynamicView layoutIfNeeded];
     } completion:^(BOOL finished) {
-        [self removeGestureRecognizer];
-        [self initGestureRecognizer];
+        [self removePanGestureRecognizer];
+        [self initPanGestureRecognizer];
         [_tableView setScrollEnabled:NO];
     }];
 }
@@ -493,8 +500,8 @@
         [lineDynamicView layoutIfNeeded];
         [vesselDynamicView layoutIfNeeded];
     } completion:^(BOOL finished) {
-        [self removeGestureRecognizer];
-        [self initGestureRecognizer];
+        [self removePanGestureRecognizer];
+        [self initPanGestureRecognizer];
         [_tableView setScrollEnabled:NO];
     }];
     
@@ -504,7 +511,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView == _tableView && _dynamicView.bounds.size.height > 0) {
         if (!recognizer) {
-            [self initGestureRecognizer];
+            [self initPanGestureRecognizer];
         }
         [_tableView setScrollEnabled:NO];
     }

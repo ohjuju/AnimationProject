@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Masonry/Masonry.h>
+#import <MJRefresh/MJRefresh.h>
 
 @interface SearchViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
