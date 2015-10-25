@@ -226,32 +226,33 @@
 - (void)initGradientView {
     //layer
     gradientView = [UIView new];
-//    gradientView.backgroundColor = [UIColor yellowColor];
+    //    gradientView.backgroundColor = [UIColor yellowColor];
     [self.view addSubview:gradientView];
     [self.view bringSubviewToFront:gradientView];
     [gradientView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_topView.mas_bottom);
+        make.top.equalTo(gradientView.mas_top);
         make.left.right.equalTo(self.view);
-        make.height.mas_equalTo(50);
+        make.height.mas_equalTo(100);
     }];
     
     
     CAGradientLayer *gradient = [CAGradientLayer layer];
-    gradient.frame = CGRectMake(0, 0, self.view.bounds.size.width, 50);
-    NSLog(@"%f",gradient.bounds.size.width);
-//    gradient.colors = [NSArray arrayWithObjects:
-//                       (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:1.0] CGColor],
-//                       (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.8] CGColor], nil];
-//    gradient.startPoint = CGPointMake(0.5, 0.0); // default; bottom of the view
-//    gradient.endPoint = CGPointMake(0.5, 1.0);   // default; top of the view
-    gradient.position = self.view.center;
-    gradient.colors = @[(__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.9].CGColor,
-                          (__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.7].CGColor,
-                          (__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.5].CGColor];
+//    gradient.frame = CGRectMake(0, 0, self.view.bounds.size.width, 50);
+    gradient.frame = (CGRect){CGPointMake(0, 70), CGSizeMake(self.view.bounds.size.width, 100)};
+    //    gradient.colors = [NSArray arrayWithObjects:
+    //                       (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:1.0] CGColor],
+    //                       (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.8] CGColor], nil];
+    //    gradient.startPoint = CGPointMake(0.5, 0.0); // default; bottom of the view
+    //    gradient.endPoint = CGPointMake(0.5, 1.0);   // default; top of the view
+    NSLog(@"%@",NSStringFromCGRect(gradient.frame));
+
+    gradient.colors = @[(__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.8].CGColor,
+                        (__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.4].CGColor,
+                        (__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.1].CGColor];
     gradient.locations = @[@(0.25),@(0.5),@(0.75)];
     gradient.startPoint = CGPointMake(0.5, 0.0);
     gradient.endPoint = CGPointMake(0.5, 1.0);
-
+    
     [gradientView.layer insertSublayer:gradient atIndex:0];
 }
 
@@ -411,7 +412,7 @@
                 [_tableView setScrollEnabled:YES];
                 lineBtn.enabled = YES;
                 vesselBtn.enabled = YES;
-//                [self removeGradientView];
+                //                [self removeGradientView];
                 gradientView.hidden = YES;
             }];
         } else if (rec.state == UIGestureRecognizerStateBegan || rec.state == UIGestureRecognizerStateChanged) {
@@ -423,7 +424,7 @@
                 if (_dynamicView.bounds.size.height > 0) {
                     
                     gradientView.hidden = NO;
-//                    CGFloat alphaPresentFlag = 1-fabs(translation.y/_dynamicView.bounds.size.height);
+                    //                    CGFloat alphaPresentFlag = 1-fabs(translation.y/_dynamicView.bounds.size.height);
                     //                        _dynamicView.alpha = alphaPresentFlag;
                     
                     CGFloat colorPresentFlag = fabs(translation.y/_dynamicView.bounds.size.height);
@@ -481,7 +482,7 @@
             [v removeFromSuperview];
         }
     }
-//    [gradientView removeFromSuperview];
+    //    [gradientView removeFromSuperview];
 }
 
 #pragma mark - button event
@@ -548,9 +549,9 @@
             }
             [_tableView setScrollEnabled:NO];
         }
-//        else {
-//            [self removeGradientView];
-//        }
+        //        else {
+        //            [self removeGradientView];
+        //        }
     }
 }
 
