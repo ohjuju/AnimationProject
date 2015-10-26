@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <Masonry/Masonry.h>
 #import <MJRefresh/MJRefresh.h>
+#import <SWTableViewCell/SWTableViewCell.h>
 
-@interface SearchViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
+@interface SearchViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,SWTableViewCellDelegate>
 
 @property (nonatomic, strong) UIView *topView;
 @property (nonatomic, strong) UIView *dynamicView;

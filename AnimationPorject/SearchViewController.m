@@ -20,6 +20,11 @@
 @property (nonatomic, strong) UIView *gradientView;
 
 @property (nonatomic, strong) UIPanGestureRecognizer *recognizer;
+
+@property (nonatomic, strong) NSIndexPath *cellIndexPath;
+
+@property (nonatomic, strong) NSArray *datas;
+
 @end
 
 @implementation SearchViewController
@@ -39,6 +44,8 @@
     self.navigationController.navigationBar.translucent = NO;
     self.title = @"Demo";
     
+
+    [self initDatas];
     [self initTopView];
     [self initDynamicViewByDefault];
     [self initTableView];
@@ -49,6 +56,14 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)initDatas {
+    NSMutableArray *datass = [NSMutableArray array];
+    for (int i=0; i<100; i++) {
+        [datass addObject:[NSString stringWithFormat:@"Okar%i",i]];
+    }
+    _datas = datass;
 }
 
 #pragma mark - initView
@@ -560,22 +575,80 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 20;
+    return _datas.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+//    if (cell == nil) {
+//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+//    }
+//    cell.textLabel.text = [NSString stringWithFormat:@"test %ld",(long)indexPath.row];
+    //this must add.
+//    cell.showsReorderControl = YES;
+//    return cell;
+    static NSString *cellIndentifier = @"Cell";
+    SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIndentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+        cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIndentifier];
+        cell.leftUtilityButtons = [self cellLeftButtons];
+        cell.rightUtilityButtons = [self cellRightButtons];
+        cell.delegate = self;
     }
-    cell.textLabel.text = [NSString stringWithFormat:@"test %ld",(long)indexPath.row];
+    cell.textLabel.text = _datas[indexPath.row];
     cell.showsReorderControl = YES;
+    
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self.navigationController pushViewController:[GradientViewController new] animated:YES];
+}
+
+- (NSArray *)cellLeftButtons {
+    return nil;
+}
+
+- (NSArray *)cellRightButtons {
+    NSMutableArray *rightButtons = [NSMutableArray new];
+    [rightButtons sw_addUtilityButtonWithColor:[UIColor redColor] icon:[UIImage imageNamed:@"icon_pencil.png"]];
+    [rightButtons sw_addUtilityButtonWithColor:[UIColor redColor] icon:[UIImage imageNamed:@"icon_paper_trash.png"]];
+    return rightButtons;
+}
+
+#pragma mark - SWTableViewDeletgate
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index {
+    //TODO
+}
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
+    switch (index) {
+        case 0:
+            NSLog(@"0");
+            break;
+        case 1:
+        {
+            //delete
+            _cellIndexPath = [_tableView indexPathForCell:cell];
+            NSMutableArray *datas = [NSMutableArray arrayWithArray:_datas];
+            [datas removeObjectAtIndex:_cellIndexPath.row];
+            _datas = datas;
+            
+            [_tableView beginUpdates];
+            NSLog(@"%ld",(long)_cellIndexPath.row);
+            [_tableView deleteRowsAtIndexPaths:@[_cellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [_tableView endUpdates];
+            
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell {
+    return YES;
 }
 
 /*
