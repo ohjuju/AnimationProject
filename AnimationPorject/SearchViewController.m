@@ -232,26 +232,26 @@
     [gradientView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(gradientView.mas_top);
         make.left.right.equalTo(self.view);
-        make.height.mas_equalTo(100);
+        make.height.mas_equalTo(80);
     }];
     
     
     CAGradientLayer *gradient = [CAGradientLayer layer];
 //    gradient.frame = CGRectMake(0, 0, self.view.bounds.size.width, 50);
-    gradient.frame = (CGRect){CGPointMake(0, 70), CGSizeMake(self.view.bounds.size.width, 100)};
-    //    gradient.colors = [NSArray arrayWithObjects:
-    //                       (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:1.0] CGColor],
-    //                       (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.8] CGColor], nil];
-    //    gradient.startPoint = CGPointMake(0.5, 0.0); // default; bottom of the view
-    //    gradient.endPoint = CGPointMake(0.5, 1.0);   // default; top of the view
-    NSLog(@"%@",NSStringFromCGRect(gradient.frame));
+    gradient.frame = (CGRect){CGPointMake(0, 70), CGSizeMake(self.view.bounds.size.width, 80)};
+        gradient.colors = [NSArray arrayWithObjects:
+                           (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:1.0] CGColor],
+                           (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.0] CGColor], nil];
+        gradient.startPoint = CGPointMake(0.5, 0.0); // default; bottom of the view
+        gradient.endPoint = CGPointMake(0.5, 1.0);   // default; top of the view
+//    NSLog(@"%@",NSStringFromCGRect(gradient.frame));
 
-    gradient.colors = @[(__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.8].CGColor,
-                        (__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.4].CGColor,
-                        (__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.1].CGColor];
-    gradient.locations = @[@(0.25),@(0.5),@(0.75)];
-    gradient.startPoint = CGPointMake(0.5, 0.0);
-    gradient.endPoint = CGPointMake(0.5, 1.0);
+//    gradient.colors = @[(__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.8].CGColor,
+//                        (__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.4].CGColor,
+//                        (__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.1].CGColor];
+//    gradient.locations = @[@(0.25),@(0.5),@(0.75)];
+//    gradient.startPoint = CGPointMake(0.5, 0.0);
+//    gradient.endPoint = CGPointMake(0.5, 1.0);
     
     [gradientView.layer insertSublayer:gradient atIndex:0];
 }
@@ -384,13 +384,13 @@
         
         /*
          * when upward,we should do this:
-         * 1.if upward a short distance(10<x<20),let view decrease animation
+         * 1.if upward a short distance(5<x<20),let view decrease animation
          * 2.else,let view decrease height with the pan, and the buton color change.
          * 3.add a blur view when long distance.
          */
         
         //if user upward > gestureMinimumTranslation,_dynamicView will hidden.
-        if (rec.state == UIGestureRecognizerStateEnded && 10.0f < fabs(translation.y) < 20.0f) {
+        if (rec.state == UIGestureRecognizerStateEnded && 5.0f < fabs(translation.y) < 20.0f) {
             
             [UIView animateWithDuration:0.2f animations:^{
                 [self decreseDynamicViewHeight];
@@ -412,7 +412,7 @@
                 [_tableView setScrollEnabled:YES];
                 lineBtn.enabled = YES;
                 vesselBtn.enabled = YES;
-                //                [self removeGradientView];
+                
                 gradientView.hidden = YES;
             }];
         } else if (rec.state == UIGestureRecognizerStateBegan || rec.state == UIGestureRecognizerStateChanged) {
