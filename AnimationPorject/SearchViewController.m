@@ -405,7 +405,7 @@
          */
         
         //if user upward > gestureMinimumTranslation,_dynamicView will hidden.
-        if (rec.state == UIGestureRecognizerStateEnded && 5.0f < fabs(translation.y) < 20.0f) {
+        if (rec.state == UIGestureRecognizerStateEnded && 10.0f < fabs(translation.y) < 20.0f) {
             
             [UIView animateWithDuration:0.2f animations:^{
                 [self decreseDynamicViewHeight];
@@ -525,6 +525,8 @@
         [self removePanGestureRecognizer];
         [self initPanGestureRecognizer];
         [_tableView setScrollEnabled:NO];
+        
+        [self swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:nil];
     }];
 }
 
@@ -552,6 +554,9 @@
         [self removePanGestureRecognizer];
         [self initPanGestureRecognizer];
         [_tableView setScrollEnabled:NO];
+        
+        [self swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:nil];
+        
     }];
 }
 
@@ -567,6 +572,9 @@
         //        else {
         //            [self removeGradientView];
         //        }
+        
+        [self swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:nil];
+        
     }
 }
 
