@@ -19,11 +19,13 @@
 
 @property (nonatomic, strong) UIView *gradientView;
 
-@property (nonatomic, strong) UIPanGestureRecognizer *recognizer;
+@property (nonatomic, strong) UIPanGestureRecognizer *panRecognizer;
+
+@property (nonatomic, strong) UILongPressGestureRecognizer *longRecognizer;
 
 @property (nonatomic, strong) NSIndexPath *cellIndexPath;
 
-@property (nonatomic, strong) NSArray *datas;
+@property (nonatomic, strong) NSMutableArray *datas;
 
 @end
 
@@ -37,14 +39,15 @@
 
 @synthesize gradientView;
 
-@synthesize recognizer;
+@synthesize panRecognizer;
+@synthesize longRecognizer;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBar.translucent = NO;
     self.title = @"Demo";
     
-
+    
     [self initDatas];
     [self initTopView];
     [self initDynamicViewByDefault];
@@ -230,6 +233,7 @@
     }];
     
     [self.view addSubview:_tableView];
+    [self.view bringSubviewToFront:_tableView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_dynamicView.mas_bottom);
         make.left.right.bottom.equalTo(self.view);
@@ -252,21 +256,13 @@
     
     
     CAGradientLayer *gradient = [CAGradientLayer layer];
-//    gradient.frame = CGRectMake(0, 0, self.view.bounds.size.width, 50);
+    //    gradient.frame = CGRectMake(0, 0, self.view.bounds.size.width, 50);
     gradient.frame = (CGRect){CGPointMake(0, 70), CGSizeMake(self.view.bounds.size.width, 80)};
-        gradient.colors = [NSArray arrayWithObjects:
-                           (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:1.0] CGColor],
-                           (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.0] CGColor], nil];
-        gradient.startPoint = CGPointMake(0.5, 0.0); // default; bottom of the view
-        gradient.endPoint = CGPointMake(0.5, 1.0);   // default; top of the view
-//    NSLog(@"%@",NSStringFromCGRect(gradient.frame));
-
-//    gradient.colors = @[(__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.8].CGColor,
-//                        (__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.4].CGColor,
-//                        (__bridge id)[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.1].CGColor];
-//    gradient.locations = @[@(0.25),@(0.5),@(0.75)];
-//    gradient.startPoint = CGPointMake(0.5, 0.0);
-//    gradient.endPoint = CGPointMake(0.5, 1.0);
+    gradient.colors = [NSArray arrayWithObjects:
+                       (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:1.0] CGColor],
+                       (id)[[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0  alpha:0.0] CGColor], nil];
+    gradient.startPoint = CGPointMake(0.5, 0.0); // default; bottom of the view
+    gradient.endPoint = CGPointMake(0.5, 1.0);   // default; top of the view
     
     [gradientView.layer insertSublayer:gradient atIndex:0];
 }
@@ -285,31 +281,33 @@
 
 #pragma mark - Gesture
 - (void)initPanGestureRecognizer {
-    recognizer = [UIPanGestureRecognizer new];
-    [_tableView addGestureRecognizer:recognizer];
-    [recognizer addTarget:self action:@selector(tableViewDidPan:)];
+    panRecognizer = [UIPanGestureRecognizer new];
+    [_tableView addGestureRecognizer:panRecognizer];
+    [panRecognizer addTarget:self action:@selector(tableViewDidPan:)];
 }
 
 - (void)removePanGestureRecognizer {
     for (UIPanGestureRecognizer *rec in _tableView.gestureRecognizers) {
-        if ([rec isEqual:recognizer]) {
+        if ([rec isEqual:panRecognizer]) {
             [_tableView removeGestureRecognizer:rec];
         }
     }
 }
 
 - (void)initLongGestureRecognizer {
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]
-                                               initWithTarget:self action:@selector(longPressGestureRecognized:)];
-    [self.tableView addGestureRecognizer:longPress];
+    longRecognizer = [[UILongPressGestureRecognizer alloc]
+                 initWithTarget:self action:@selector(longPressGestureRecognized:)];
+    //    longPress.cancelsTouchesInView = NO;
+    longRecognizer.delegate = self;
+    [_tableView addGestureRecognizer:longRecognizer];
 }
 
 - (void)longPressGestureRecognized:(UILongPressGestureRecognizer *)rec {
     
-    UILongPressGestureRecognizer *longPress = (UILongPressGestureRecognizer *)rec;
-    UIGestureRecognizerState state = longPress.state;
+    UILongPressGestureRecognizer *longPresss = (UILongPressGestureRecognizer *)rec;
+    UIGestureRecognizerState state = longPresss.state;
     
-    CGPoint location = [longPress locationInView:self.tableView];
+    CGPoint location = [longRecognizer locationInView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
     
     static UIView *snapshot = nil;        ///< A snapshot of the row user is moving.
@@ -353,7 +351,7 @@
             if (indexPath && ![indexPath isEqual:sourceIndexPath]) {
                 
                 // ... update data source.
-                //                [self.objects exchangeObjectAtIndex:indexPath.row withObjectAtIndex:sourceIndexPath.row];
+                [_datas exchangeObjectAtIndex:indexPath.row withObjectAtIndex:sourceIndexPath.row];
                 
                 // ... move the rows.
                 [self.tableView moveRowAtIndexPath:sourceIndexPath toIndexPath:indexPath];
@@ -365,7 +363,9 @@
         }
         default: {
             // Clean up.
+            
             UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:sourceIndexPath];
+            
             [UIView animateWithDuration:0.25 animations:^{
                 
                 snapshot.center = cell.center;
@@ -497,7 +497,6 @@
             [v removeFromSuperview];
         }
     }
-    //    [gradientView removeFromSuperview];
 }
 
 #pragma mark - button event
@@ -525,8 +524,6 @@
         [self removePanGestureRecognizer];
         [self initPanGestureRecognizer];
         [_tableView setScrollEnabled:NO];
-        
-        [self swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:nil];
     }];
 }
 
@@ -554,9 +551,6 @@
         [self removePanGestureRecognizer];
         [self initPanGestureRecognizer];
         [_tableView setScrollEnabled:NO];
-        
-        [self swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:nil];
-        
     }];
 }
 
@@ -564,17 +558,11 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView == _tableView) {
         if ( _dynamicView.bounds.size.height > 0) {
-            if (!recognizer) {
+            if (!panRecognizer) {
                 [self initPanGestureRecognizer];
             }
             [_tableView setScrollEnabled:NO];
         }
-        //        else {
-        //            [self removeGradientView];
-        //        }
-        
-        [self swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:nil];
-        
     }
 }
 
@@ -587,86 +575,38 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-//    if (cell == nil) {
-//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
-//    }
-//    cell.textLabel.text = [NSString stringWithFormat:@"test %ld",(long)indexPath.row];
-    //this must add.
-//    cell.showsReorderControl = YES;
-//    return cell;
-    static NSString *cellIndentifier = @"Cell";
-    SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIndentifier];
-    if (cell == nil) {
-        cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIndentifier];
-        cell.leftUtilityButtons = [self cellLeftButtons];
-        cell.rightUtilityButtons = [self cellRightButtons];
-        cell.delegate = self;
+    static NSString * reuseIdentifier = @"programmaticCell";
+    MGSwipeTableCell * cell = [self.tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+    if (!cell) {
+        cell = [[MGSwipeTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     }
-    cell.textLabel.text = _datas[indexPath.row];
-    cell.showsReorderControl = YES;
     
+    cell.textLabel.text = _datas[indexPath.row];
+    cell.detailTextLabel.text = @"Detail text";
+    cell.delegate = self; //optional
+    
+    
+    //configure left buttons
+    cell.rightButtons = @[[MGSwipeButton buttonWithTitle:@"" icon:[UIImage imageNamed:@"icon_paper_trash.png"] backgroundColor:[UIColor redColor] padding:20.0 callback:^BOOL(MGSwipeTableCell *sender) {
+        NSLog(@"delete");
+        NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
+        
+        [_datas removeObjectAtIndex:cellIndexPath.row];
+        [self.tableView deleteRowsAtIndexPaths:@[cellIndexPath]
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+        return true;
+    }],[MGSwipeButton buttonWithTitle:@"" icon:[UIImage imageNamed:@"icon_pencil.png"] backgroundColor:[UIColor redColor] padding:20.0 callback:^BOOL(MGSwipeTableCell *sender) {
+        NSLog(@"edit");
+        return true;
+    }]];
+    cell.rightSwipeSettings.transition = MGSwipeDirectionLeftToRight;
     return cell;
+    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self.navigationController pushViewController:[GradientViewController new] animated:YES];
 }
-
-- (NSArray *)cellLeftButtons {
-    return nil;
-}
-
-- (NSArray *)cellRightButtons {
-    NSMutableArray *rightButtons = [NSMutableArray new];
-    [rightButtons sw_addUtilityButtonWithColor:[UIColor redColor] icon:[UIImage imageNamed:@"icon_pencil.png"]];
-    [rightButtons sw_addUtilityButtonWithColor:[UIColor redColor] icon:[UIImage imageNamed:@"icon_paper_trash.png"]];
-    return rightButtons;
-}
-
-#pragma mark - SWTableViewDeletgate
-- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index {
-    //TODO
-}
-
-- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
-    switch (index) {
-        case 0:
-            NSLog(@"0");
-            break;
-        case 1:
-        {
-            //delete
-            _cellIndexPath = [_tableView indexPathForCell:cell];
-            NSMutableArray *datas = [NSMutableArray arrayWithArray:_datas];
-            [datas removeObjectAtIndex:_cellIndexPath.row];
-            _datas = datas;
-            
-            [_tableView beginUpdates];
-            NSLog(@"%ld",(long)_cellIndexPath.row);
-            [_tableView deleteRowsAtIndexPaths:@[_cellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [_tableView endUpdates];
-            
-            break;
-        }
-        default:
-            break;
-    }
-}
-
-- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell {
-    return YES;
-}
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 @end

@@ -9,13 +9,11 @@
 /* Begin PBXBuildFile section */
 		0D1BF44C1BD3A21600F4BBE5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BF44B1BD3A21600F4BBE5 /* main.m */; };
 		0D1BF44F1BD3A21600F4BBE5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BF44E1BD3A21600F4BBE5 /* AppDelegate.m */; };
-		0D1BF4521BD3A21600F4BBE5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BF4511BD3A21600F4BBE5 /* ViewController.m */; };
 		0D1BF4551BD3A21600F4BBE5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D1BF4531BD3A21600F4BBE5 /* Main.storyboard */; };
 		0D1BF4571BD3A21600F4BBE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D1BF4561BD3A21600F4BBE5 /* Assets.xcassets */; };
 		0D1BF4651BD3A21600F4BBE5 /* AnimationPorjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BF4641BD3A21600F4BBE5 /* AnimationPorjectTests.m */; };
 		0D1BF4701BD3A21600F4BBE5 /* AnimationPorjectUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BF46F1BD3A21600F4BBE5 /* AnimationPorjectUITests.m */; };
 		0D1BF47E1BD3A48800F4BBE5 /* nvdi.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0D1BF47D1BD3A48800F4BBE5 /* nvdi.jpg */; };
-		0D1BF4811BD3BF8600F4BBE5 /* GenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D1BF4801BD3BF8600F4BBE5 /* GenViewController.m */; };
 		428FE824F33065514632CB6F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11FEA12B3277B170D9BA3238 /* libPods.a */; };
 		B11025241BDA25AB0012CC41 /* GradientViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B11025231BDA25AB0012CC41 /* GradientViewController.m */; };
 		B11B02581BD872A20087DDB8 /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B11B02571BD872A20087DDB8 /* SearchViewController.m */; };
@@ -45,8 +43,6 @@
 		0D1BF44B1BD3A21600F4BBE5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0D1BF44D1BD3A21600F4BBE5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0D1BF44E1BD3A21600F4BBE5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		0D1BF4501BD3A21600F4BBE5 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		0D1BF4511BD3A21600F4BBE5 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		0D1BF4541BD3A21600F4BBE5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0D1BF4561BD3A21600F4BBE5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0D1BF45B1BD3A21600F4BBE5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -57,8 +53,6 @@
 		0D1BF46F1BD3A21600F4BBE5 /* AnimationPorjectUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnimationPorjectUITests.m; sourceTree = "<group>"; };
 		0D1BF4711BD3A21600F4BBE5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0D1BF47D1BD3A48800F4BBE5 /* nvdi.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nvdi.jpg; sourceTree = "<group>"; };
-		0D1BF47F1BD3BF8600F4BBE5 /* GenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenViewController.h; sourceTree = "<group>"; };
-		0D1BF4801BD3BF8600F4BBE5 /* GenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenViewController.m; sourceTree = "<group>"; };
 		11FEA12B3277B170D9BA3238 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		369E8A715A0F07E740DA07B6 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		B11025221BDA25AB0012CC41 /* GradientViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientViewController.h; sourceTree = "<group>"; };
@@ -126,10 +120,6 @@
 				0D1BF47D1BD3A48800F4BBE5 /* nvdi.jpg */,
 				0D1BF44D1BD3A21600F4BBE5 /* AppDelegate.h */,
 				0D1BF44E1BD3A21600F4BBE5 /* AppDelegate.m */,
-				0D1BF4501BD3A21600F4BBE5 /* ViewController.h */,
-				0D1BF4511BD3A21600F4BBE5 /* ViewController.m */,
-				0D1BF47F1BD3BF8600F4BBE5 /* GenViewController.h */,
-				0D1BF4801BD3BF8600F4BBE5 /* GenViewController.m */,
 				B11B02561BD872A20087DDB8 /* SearchViewController.h */,
 				B11B02571BD872A20087DDB8 /* SearchViewController.m */,
 				B11025221BDA25AB0012CC41 /* GradientViewController.h */,
@@ -255,6 +245,7 @@
 				TargetAttributes = {
 					0D1BF4461BD3A21600F4BBE5 = {
 						CreatedOnToolsVersion = 7.0.1;
+						DevelopmentTeam = SVJP8767S9;
 					};
 					0D1BF45F1BD3A21600F4BBE5 = {
 						CreatedOnToolsVersion = 7.0.1;
@@ -369,10 +360,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B11025241BDA25AB0012CC41 /* GradientViewController.m in Sources */,
-				0D1BF4521BD3A21600F4BBE5 /* ViewController.m in Sources */,
 				0D1BF44F1BD3A21600F4BBE5 /* AppDelegate.m in Sources */,
 				0D1BF44C1BD3A21600F4BBE5 /* main.m in Sources */,
-				0D1BF4811BD3BF8600F4BBE5 /* GenViewController.m in Sources */,
 				B11B02581BD872A20087DDB8 /* SearchViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -507,10 +496,14 @@
 			baseConfigurationReference = 369E8A715A0F07E740DA07B6 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = AnimationPorject/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.okar.AnimationPorject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -519,10 +512,14 @@
 			baseConfigurationReference = B80DD0C17B60DFE4D803C2C1 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = AnimationPorject/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.okar.AnimationPorject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

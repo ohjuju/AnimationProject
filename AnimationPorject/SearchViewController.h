@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <Masonry/Masonry.h>
 #import <MJRefresh/MJRefresh.h>
-#import <SWTableViewCell/SWTableViewCell.h>
+#import <MGSwipeTableCell/MGSwipeTableCell.h>
+#import <MGSwipeTableCell/MGSwipeButton.h>
 
-@interface SearchViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,SWTableViewCellDelegate>
+@interface SearchViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIGestureRecognizerDelegate,MGSwipeTableCellDelegate>
 
 @property (nonatomic, strong) UIView *topView;
 @property (nonatomic, strong) UIView *dynamicView;
